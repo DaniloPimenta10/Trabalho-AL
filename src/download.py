@@ -1,4 +1,4 @@
-# [IA] Gemini 2026-11-18 Criação da estrutura base do script para baixar os CSVs da API do InfoDengue, calcular o hash SHA-256 e gerar o arquivo de manifesto exigido pelo edital.
+# [IA] Gemini 18-11-2026 Criação da estrutura base do script para baixar os CSVs da API do InfoDengue, calcular o hash SHA-256 e gerar o arquivo de manifesto exigido pelo edital.
 import os
 import time
 import hashlib
@@ -48,4 +48,4 @@ def baixar_dados_dengue():
 
 if __name__ == "__main__":
     baixar_dados_dengue()
-# [/IA]
+# [IA]

@@ -1,3 +1,4 @@
+# [IA] Gemini - 20/11/2026 - Usado para tirar duvidas do funcionamento das bibliotecas e corrigir erros pontuais
 import hashlib
 import os
 import pathlib
@@ -177,3 +178,5 @@ def criar_tabela():
 
 if __name__ == "__main__":
     criar_tabela()
+
+#[IA]
