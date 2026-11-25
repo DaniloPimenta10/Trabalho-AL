@@ -27,7 +27,7 @@ def grafico_serra(raiz):
     ax.grid(axis="y", linestyle="--", alpha=0.5)
 
     plt.tight_layout()
-    plt.savefig(raiz / "results" / "e1_serra_niveis.png", dpi=300)
+    plt.savefig(raiz / "results" / "tabelas" / "e1_serra_niveis.png", dpi=300)
     plt.close(fig)
      #[IA]
 
@@ -66,7 +66,7 @@ def grafico_heatmap_nivel3(raiz: pathlib.Path, geocodes: list[str]):
     ax.set_ylabel("Município (geocode)")
 
     plt.tight_layout()
-    plt.savefig(raiz / "results" / "e1_heatmap_nivel3.png", dpi=300)
+    plt.savefig(raiz / "results" / "tabelas" / "e1_heatmap_nivel3.png", dpi=300)
     plt.close(fig)
 #[IA]
 
@@ -85,6 +85,13 @@ def criar_tabela():
     caminho_manifest = raiz / "data" / "MANIFEST.txt"
 
     os.makedirs(raiz / "results", exist_ok=True)
+
+    dir_tabelas = raiz / "results" / "tabelas"
+    dir_figuras = raiz / "results" / "figuras"
+
+    dir_tabelas.mkdir(parents=True, exist_ok=True)
+    dir_figuras.mkdir(parents=True, exist_ok=True)
+
 
     linhas_auditoria = []
     hashes_ok = 0
