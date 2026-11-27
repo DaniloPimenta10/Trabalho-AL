@@ -1,18 +1,21 @@
 # [IA] Gemini - 20/11/2026 - Usado para tirar duvidas do funcionamento das bibliotecas e corrigir erros pontuais
 import hashlib
-import os
 import pathlib
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 
-def grafico_serra(raiz):
 
+def grafico_serra(raiz: pathlib.Path) -> None:
     dados_serra = pd.read_csv(raiz / "data" / "raw" / "3205002.csv")
-    df = (dados_serra.sort_values("SE", ascending=True).drop_duplicates(subset=["SE"], keep="first").reset_index(drop=True))
+    df = (
+        dados_serra.sort_values("SE", ascending=True)
+        .drop_duplicates(subset=["SE"], keep="first")
+        .reset_index(drop=True)
+    )
     df["data_dt"] = pd.to_datetime(df["data_iniSE"], errors="coerce")
 
-    #[IA] Gemini - 23/11/2026 - Criação do gráfico de sequencia de níveis da Serra
+    # [IA] Gemini - 23/11/2026 - Criação do gráfico de sequencia de níveis da Serra
     fig, ax = plt.subplots(figsize=(13, 4))
     ax.step(df["data_dt"], df["nivel"], where="post", linewidth=1.1, color="#1f4e78")
 
@@ -27,12 +30,13 @@ def grafico_serra(raiz):
     ax.grid(axis="y", linestyle="--", alpha=0.5)
 
     plt.tight_layout()
-    plt.savefig(raiz / "results" / "tabelas" / "e1_serra_niveis.png", dpi=300)
+    plt.savefig(raiz / "results" / "figuras" / "e1_serra_niveis.png", dpi=300)
     plt.close(fig)
-     #[IA]
+    # [/IA]
 
-#[IA] Gemini - 23/11/2026 - Criação do mapa de calor municipio x ano
-def grafico_heatmap_nivel3(raiz: pathlib.Path, geocodes: list[str]):
+
+# [IA] Gemini - 23/11/2026 - Criação do mapa de calor municipio x ano
+def grafico_heatmap_nivel3(raiz: pathlib.Path, geocodes: list[str]) -> None:
     series_municipios = {}
 
     for geocode in geocodes:
@@ -66,32 +70,30 @@ def grafico_heatmap_nivel3(raiz: pathlib.Path, geocodes: list[str]):
     ax.set_ylabel("Município (geocode)")
 
     plt.tight_layout()
-    plt.savefig(raiz / "results" / "tabelas" / "e1_heatmap_nivel3.png", dpi=300)
+    plt.savefig(raiz / "results" / "figuras" / "e1_heatmap_nivel3.png", dpi=300)
     plt.close(fig)
-#[IA]
+    # [/IA]
 
 
-# [IA] Gemini - 23/11/2026 - Gerar código para conferir o hash do MANIFEST.md
+# [IA] Gemini - 23/11/2026 - Gerar código para conferir o hash do MANIFEST.txt
 def calcular_sha256(caminho_arquivo: pathlib.Path) -> str:
     h = hashlib.sha256()
     with open(caminho_arquivo, "rb") as f:
         for bloco in iter(lambda: f.read(8192), b""):
             h.update(bloco)
     return h.hexdigest()
-# [IA]
+# [/IA]
 
-def criar_tabela():
+
+def criar_tabela() -> None:
     raiz = pathlib.Path(__file__).resolve().parent.parent
     caminho_manifest = raiz / "data" / "MANIFEST.txt"
-
-    os.makedirs(raiz / "results", exist_ok=True)
 
     dir_tabelas = raiz / "results" / "tabelas"
     dir_figuras = raiz / "results" / "figuras"
 
     dir_tabelas.mkdir(parents=True, exist_ok=True)
     dir_figuras.mkdir(parents=True, exist_ok=True)
-
 
     linhas_auditoria = []
     hashes_ok = 0
@@ -111,13 +113,13 @@ def criar_tabela():
 
             caminho_csv = raiz / "data" / "raw" / f"{geocode}.csv"
 
-            # [IA] Gemini - 23/11/2026 - Gerar código para conferir o hash do MANIFEST.md
+            # [IA] Gemini - 23/11/2026 - Gerar código para conferir o hash do MANIFEST.txt
             hash_atual = calcular_sha256(caminho_csv)
             if hash_atual == hash_esperado:
                 hashes_ok += 1
             else:
                 divergentes.append(geocode)
-            # [IA]
+            # [/IA]
 
             dados_municipio = pd.read_csv(caminho_csv)
 
@@ -173,7 +175,7 @@ def criar_tabela():
             linhas_auditoria.append(registro)
 
     df_auditoria = pd.DataFrame(linhas_auditoria)
-    df_auditoria.to_csv(raiz / "results" / "e1_auditoria.csv", index=False)
+    df_auditoria.to_csv(dir_tabelas / "e1_auditoria.csv", index=False)
 
     grafico_serra(raiz)
     grafico_heatmap_nivel3(raiz, df_auditoria["geocode"].tolist())
@@ -185,5 +187,4 @@ def criar_tabela():
 
 if __name__ == "__main__":
     criar_tabela()
-
-#[IA]
+# [/IA]
